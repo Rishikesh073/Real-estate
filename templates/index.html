@@ -87,6 +87,9 @@
                     <button id="run-analysis-btn" class="btn btn-primary" style="height: 40px; margin-top: 14px;">
                         <i class="fa-solid fa-play"></i> Run Analysis
                     </button>
+                    <button id="download-full-pdf-btn" class="btn btn-secondary" style="height: 40px; margin-top: 14px; background: rgba(99, 102, 241, 0.15); border-color: rgba(99, 102, 241, 0.3); color: #818cf8; cursor: pointer;">
+                        <i class="fa-solid fa-file-pdf"></i> Download PDF Report
+                    </button>
                 </div>
             </header>
 
@@ -559,6 +562,171 @@
             </section>
         </main>
     </div>
+    <!-- COMPREHENSIVE PDF REPORT FOR OFFSCREEN RENDERING -->
+    <div style="position: absolute; left: -99999px; top: -99999px;">
+        <div id="comprehensive-pdf-report" style="background: #0b0f19; padding: 20px; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; width: 1000px;">
+            
+            <!-- PAGE 1: TITLE, GENERAL INFO & CASH FLOWS -->
+            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
+                <!-- Header -->
+                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 24px;">
+                    <div>
+                        <h1 style="font-size: 24px; font-family: 'Outfit', sans-serif; margin-bottom: 6px; color: #6366f1; font-weight: 700;">Month-End Performance & Risk Audit Report</h1>
+                        <p style="font-size: 13px; color: #9ca3af; margin: 0;">Project Name: <strong>Eden Square (R5B Tower)</strong></p>
+                    </div>
+                    <div style="text-align: right;">
+                        <p style="font-size: 14px; margin: 0; font-weight: 600;">Report Period: <span id="pdf-report-month" style="color: #6366f1; font-weight: 700;">June 2026</span></p>
+                        <p style="font-size: 11px; color: #9ca3af; margin-top: 4px;">Generated: <span id="pdf-report-timestamp">June 28, 2026 18:00</span></p>
+                    </div>
+                </div>
+                
+                <!-- Summary stats -->
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;">
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Actual Collections</span>
+                        <h2 id="pdf-summary-collections" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Actual Net Cash Flow</span>
+                        <h2 id="pdf-summary-ncf" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Sales Booked</span>
+                        <h2 id="pdf-summary-sales" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
+                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Escalations Flagged</span>
+                        <h2 id="pdf-summary-escalations" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">0</h2>
+                    </div>
+                </div>
+                
+                <!-- Cash Flow Table -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-money-bill-wave" style="margin-right: 6px;"></i> 1. Net Cash Flow & Budget Variances</h3>
+                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
+                        <table id="pdf-cashflow-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
+                                    <th style="padding: 8px;">Metric</th>
+                                    <th style="padding: 8px;">Collections Received</th>
+                                    <th style="padding: 8px;">Collections Due/Overdue</th>
+                                    <th style="padding: 8px;">Construction Outflow</th>
+                                    <th style="padding: 8px;">Other Costs</th>
+                                    <th style="padding: 8px;">Actual NCF</th>
+                                    <th style="padding: 8px;">Target NCF</th>
+                                    <th style="padding: 8px;">Variance</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 2: KEY TARGETS PROGRESS -->
+            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
+                <!-- Mini Header -->
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
+                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
+                </div>
+                <!-- Progress Targets Table -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-chart-bar" style="margin-right: 6px;"></i> 2. Key Metrics Progress Against Targets</h3>
+                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
+                        <table id="pdf-progress-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
+                                    <th style="padding: 8px; width: 100px;">Category</th>
+                                    <th style="padding: 8px; width: 130px;">Metric</th>
+                                    <th style="padding: 8px;">Description</th>
+                                    <th style="padding: 8px; width: 95px;">Actual</th>
+                                    <th style="padding: 8px; width: 95px;">Target</th>
+                                    <th style="padding: 8px; width: 95px;">Variance</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 3: ESCALATIONS & ACTIVE RISKS -->
+            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
+                <!-- Mini Header -->
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
+                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
+                </div>
+                <!-- Escalations Table -->
+                <div style="margin-bottom: 20px;">
+                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 6px;"></i> 3. Escalations & Red/Amber Risks</h3>
+                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
+                        <table id="pdf-escalations-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
+                                    <th style="padding: 8px; width: 120px;">Item</th>
+                                    <th style="padding: 8px; width: 120px;">Metric Impacted</th>
+                                    <th style="padding: 8px;">Reason</th>
+                                    <th style="padding: 8px; width: 120px;">Suggested Owner</th>
+                                    <th style="padding: 8px; width: 100px;">Due Date</th>
+                                    <th style="padding: 8px; width: 80px;">Severity</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- PAGE 4: ACTION PLAN & DATA QUALITY LOGS -->
+            <div style="min-height: 620px;">
+                <!-- Mini Header -->
+                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
+                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
+                </div>
+                <!-- Action Plan Table -->
+                <div style="margin-bottom: 28px;">
+                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-tasks" style="margin-right: 6px;"></i> 4. Owner-wise Action Plan</h3>
+                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
+                        <table id="pdf-actions-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
+                                    <th style="padding: 8px; width: 120px;">Owner</th>
+                                    <th style="padding: 8px; width: 120px;">Department</th>
+                                    <th style="padding: 8px;">Task</th>
+                                    <th style="padding: 8px; width: 100px;">Priority</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Quality Logs Table -->
+                <div>
+                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-shield-halved" style="margin-right: 6px;"></i> 5. Data Integrity & Quality Safeguards</h3>
+                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
+                        <table id="pdf-quality-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
+                            <thead>
+                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
+                                    <th style="padding: 8px; width: 130px;">Timestamp</th>
+                                    <th style="padding: 8px; width: 120px;">File/Sheet</th>
+                                    <th style="padding: 8px; width: 120px;">Field/Activity</th>
+                                    <th style="padding: 8px; width: 120px;">Issue Type</th>
+                                    <th style="padding: 8px;">Details</th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+
     <script src="{{ url_for('static', filename='app.js') }}"></script>
 </body>
 </html>

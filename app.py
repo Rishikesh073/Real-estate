@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, render_template, request
+from flask import Flask, jsonify, render_template, request, send_file
 import os
 import sys
 
@@ -8,6 +8,13 @@ sys.path.append(os.path.dirname(os.path.abspath(__file__)))
 from site_performance_agent import SitePerformanceAgent
 
 app = Flask(__name__, template_folder='templates', static_folder='static')
+
+def get_excel_path(month=None):
+    filename = f'Site_Performance_Report_{month}.xlsx' if month else 'Site_Performance_Report.xlsx'
+    if os.name != 'nt': # Linux (Vercel serverless)
+        return os.path.join('/tmp', filename)
+    else:
+        return os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', filename)
 
 @app.route('/')
 def index():
@@ -20,8 +27,8 @@ def run_analysis():
         agent = SitePerformanceAgent(data_dir=os.path.dirname(os.path.abspath(__file__)), month=month)
         agent.run()
         
-        # Save static version for download
-        static_excel_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'Site_Performance_Report.xlsx')
+        # Save dynamically to local static or /tmp (Vercel)
+        static_excel_path = get_excel_path(month)
         agent.generate_output(output_path=static_excel_path)
         
         # Get JSON results
@@ -39,14 +46,27 @@ def run_analysis():
             "details": error_details
         }), 500
 
+@app.route('/api/download')
+def download_report():
+    try:
+        month = request.args.get('month', '2026-06')
+        static_excel_path = get_excel_path(month)
+        if not os.path.exists(static_excel_path):
+            agent = SitePerformanceAgent(data_dir=os.path.dirname(os.path.abspath(__file__)), month=month)
+            agent.run()
+            agent.generate_output(output_path=static_excel_path)
+        return send_file(static_excel_path, as_attachment=True, download_name=f'Site_Performance_Report_{month}.xlsx')
+    except Exception as e:
+        return str(e), 500
+
 if __name__ == '__main__':
-    # Pre-generate on startup
+    # Pre-generate on startup (only local)
     try:
         print("Pre-generating reports on startup...")
         startup_agent = SitePerformanceAgent(data_dir=os.path.dirname(os.path.abspath(__file__)))
         startup_agent.run()
         
-        static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static', 'Site_Performance_Report.xlsx')
+        static_path = get_excel_path()
         startup_agent.generate_output(output_path=static_path)
         print("Startup report generation complete.")
     except Exception as startup_err:

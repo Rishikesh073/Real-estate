@@ -102,6 +102,15 @@ document.addEventListener('DOMContentLoaded', () => {
     runBtnPlaceholder.addEventListener('click', triggerAnalysis);
     document.getElementById('filter-analysis-month').addEventListener('change', triggerAnalysis);
 
+    const downloadFullPdfBtn = document.getElementById('download-full-pdf-btn');
+    if (downloadFullPdfBtn) {
+        downloadFullPdfBtn.addEventListener('click', () => {
+            const monthSelect = document.getElementById('filter-analysis-month');
+            const selectedMonthName = monthSelect.options[monthSelect.selectedIndex].text.replace(/[\s\(\)]+/g, '_');
+            downloadPDF('comprehensive-pdf-report', `Comprehensive_Month_End_Report_${selectedMonthName}.pdf`);
+        });
+    }
+
     // Helpers
     const formatCurrency = (val) => {
         if (val === null || val === undefined || isNaN(val)) return '-';
@@ -127,12 +136,13 @@ document.addEventListener('DOMContentLoaded', () => {
         
         document.getElementById('summary-escalations').textContent = escalations.length;
 
-        // Dynamic download links to prevent caching
+        // Dynamic download links to prevent caching and support serverless download
         const timestamp = Date.now();
+        const selectedMonth = document.getElementById('filter-analysis-month').value;
         const cfDownload = document.getElementById('download-excel-cf');
-        if (cfDownload) cfDownload.href = `/static/Site_Performance_Report.xlsx?t=${timestamp}`;
+        if (cfDownload) cfDownload.href = `/api/download?month=${selectedMonth}&t=${timestamp}`;
         const perfDownload = document.getElementById('download-excel-perf');
-        if (perfDownload) perfDownload.href = `/static/Site_Performance_Report.xlsx?t=${timestamp}`;
+        if (perfDownload) perfDownload.href = `/api/download?month=${selectedMonth}&t=${timestamp}`;
 
         // Variances
         const setVarianceText = (elId, value) => {
@@ -386,6 +396,25 @@ document.addEventListener('DOMContentLoaded', () => {
                 perfBody.appendChild(tr);
             });
         }
+
+        // Copy innerHTML to off-screen PDF tables for comprehensive report
+        document.querySelector('#pdf-cashflow-table tbody').innerHTML = document.querySelector('#cashflow-table tbody').innerHTML;
+        document.querySelector('#pdf-progress-table tbody').innerHTML = document.querySelector('#progress-table tbody').innerHTML;
+        document.querySelector('#pdf-escalations-table tbody').innerHTML = document.querySelector('#escalations-table tbody').innerHTML;
+        document.querySelector('#pdf-actions-table tbody').innerHTML = document.querySelector('#actions-table tbody').innerHTML;
+        document.querySelector('#pdf-quality-table tbody').innerHTML = document.querySelector('#quality-table tbody').innerHTML;
+
+        // Set PDF metadata
+        const monthSelect = document.getElementById('filter-analysis-month');
+        const selectedMonthText = monthSelect.options[monthSelect.selectedIndex].text;
+        document.getElementById('pdf-report-month').textContent = selectedMonthText;
+        document.getElementById('pdf-report-timestamp').textContent = new Date().toLocaleString();
+
+        // Populate summary cards inside PDF
+        document.getElementById('pdf-summary-collections').textContent = document.getElementById('summary-collections').textContent;
+        document.getElementById('pdf-summary-ncf').textContent = document.getElementById('pdf-summary-ncf').textContent;
+        document.getElementById('pdf-summary-sales').textContent = document.getElementById('summary-sales').textContent;
+        document.getElementById('pdf-summary-escalations').textContent = document.getElementById('summary-escalations').textContent;
     };
 
     const renderNCFChart = (cashFlow) => {
