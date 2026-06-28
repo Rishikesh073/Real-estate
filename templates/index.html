@@ -1,0 +1,564 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Real Estate Month-End Site Performance Review</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- html2pdf.js for client-side PDF generation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="logo-area">
+                <i class="fa-solid fa-building-columns logo-icon"></i>
+                <div class="logo-text">
+                    <h2>Performance</h2>
+                    <span>Review Portal</span>
+                </div>
+            </div>
+            
+            <nav class="nav-menu">
+                <a href="#summary" class="nav-item active" data-tab="summary">
+                    <i class="fa-solid fa-chart-pie"></i> Executive Summary
+                </a>
+                <a href="#performance" class="nav-item" data-tab="performance">
+                    <i class="fa-solid fa-file-invoice-dollar"></i> Performance Report
+                </a>
+                <a href="#cashflow" class="nav-item" data-tab="cashflow">
+                    <i class="fa-solid fa-sack-dollar"></i> Cash Flow Report
+                </a>
+                <a href="#progress" class="nav-item" data-tab="progress">
+                    <i class="fa-solid fa-bars-progress"></i> Progress Update
+                </a>
+                <a href="#escalation" class="nav-item" data-tab="escalation">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Escalations
+                </a>
+                <a href="#actions" class="nav-item" data-tab="actions">
+                    <i class="fa-solid fa-list-check"></i> Action Plan
+                </a>
+                <a href="#quality" class="nav-item" data-tab="quality">
+                    <i class="fa-solid fa-clipboard-check"></i> Data Quality
+                </a>
+                <a href="#comms" class="nav-item" data-tab="comms">
+                    <i class="fa-solid fa-envelope-open-text"></i> Communications
+                </a>
+                <a href="#workflow" class="nav-item" data-tab="workflow">
+                    <i class="fa-solid fa-diagram-project"></i> Data Workflow
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="system-status">
+                    <span class="status-dot green"></span>
+                    <span id="status-text">System Ready</span>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Header -->
+            <header class="top-header">
+                <div class="header-title">
+                    <h1>Real Estate Month-End Site Performance Review</h1>
+                    <p>Automated rules engine & cross-functional risk analysis dashboard</p>
+                </div>
+                <div style="display: flex; align-items: center; gap: 12px; margin-left: auto;">
+                    <div style="display: flex; flex-direction: column; gap: 2px;">
+                        <span style="font-size: 10px; color: var(--text-secondary); text-transform: uppercase; font-weight: 700;">Reporting Period</span>
+                        <select id="filter-analysis-month" style="padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.3); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px; font-weight: 600; cursor: pointer;">
+                            <option value="2026-06" selected>June 2026 (Active Month)</option>
+                            <option value="2026-05">May 2026</option>
+                            <option value="2026-04">April 2026</option>
+                            <option value="Q1">Q1 Cumulative (April - June 2026)</option>
+                        </select>
+                    </div>
+                    <button id="run-analysis-btn" class="btn btn-primary" style="height: 40px; margin-top: 14px;">
+                        <i class="fa-solid fa-play"></i> Run Analysis
+                    </button>
+                </div>
+            </header>
+
+            <!-- Dashboard Body -->
+            <section class="dashboard-body">
+                <!-- Welcome/Empty State or Loaded State -->
+                <div id="no-data-state" class="center-state">
+                    <div class="state-card">
+                        <i class="fa-solid fa-database placeholder-icon"></i>
+                        <h3>No Data Loaded</h3>
+                        <p>Trigger the real-time analysis engine to process the raw sales, collections, and construction trackers, and generate reports.</p>
+                        <button id="run-analysis-btn-placeholder" class="btn btn-primary btn-large">
+                            <i class="fa-solid fa-bolt"></i> Run Analysis Now
+                        </button>
+                    </div>
+                </div>
+
+                <div id="loading-state" class="center-state hidden">
+                    <div class="spinner-container" style="width: 100%; max-width: 900px; text-align: center;">
+                        <div class="loading-spinner"></div>
+                        <h3 id="loading-title">Processing Datasets...</h3>
+                        <p id="loading-desc" style="color: var(--text-secondary); margin-bottom: 30px; font-size: 14px;">
+                            Executing rules engine, checking construction delays, calculating cash-flow leakages.
+                        </p>
+                        
+                        <!-- Visual Progress Stepper -->
+                        <div class="workflow-stepper loading-stepper" style="margin-top: 30px;">
+                            <!-- Stage 1 -->
+                            <div class="workflow-step glass" id="load-step-1">
+                                <div class="step-num">1</div>
+                                <h4>Data Ingestion</h4>
+                                <p>Reading raw spreadsheet files...</p>
+                            </div>
+                            
+                            <div class="workflow-arrow-container">
+                                <i class="fa-solid fa-chevron-right workflow-arrow"></i>
+                            </div>
+
+                            <!-- Stage 2 -->
+                            <div class="workflow-step glass" id="load-step-2">
+                                <div class="step-num">2</div>
+                                <h4>Schema & Linking</h4>
+                                <p>Relating project & owner keys...</p>
+                            </div>
+
+                            <div class="workflow-arrow-container">
+                                <i class="fa-solid fa-chevron-right workflow-arrow"></i>
+                            </div>
+
+                            <!-- Stage 3 -->
+                            <div class="workflow-step glass" id="load-step-3">
+                                <div class="step-num">3</div>
+                                <h4>Rules Engine</h4>
+                                <p>Calculating NCF & delays...</p>
+                            </div>
+
+                            <div class="workflow-arrow-container">
+                                <i class="fa-solid fa-chevron-right workflow-arrow"></i>
+                            </div>
+
+                            <!-- Stage 4 -->
+                            <div class="workflow-step glass" id="load-step-4">
+                                <div class="step-num">4</div>
+                                <h4>Reports Generation</h4>
+                                <p>Writing files & communication drafts...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="dashboard-content" class="hidden">
+                    
+                    <!-- TAB: EXECUTIVE SUMMARY -->
+                    <div id="tab-summary" class="tab-pane active">
+                        <div class="metrics-grid">
+                            <div class="metric-card glass">
+                                <span class="metric-label">Actual Collections</span>
+                                <h2 id="summary-collections" class="metric-val">$0</h2>
+                                <span id="summary-collections-var" class="metric-change">vs Target</span>
+                            </div>
+                            <div class="metric-card glass">
+                                <span class="metric-label">Actual NCF</span>
+                                <h2 id="summary-ncf" class="metric-val">$0</h2>
+                                <span id="summary-ncf-var" class="metric-change">vs Target</span>
+                            </div>
+                            <div class="metric-card glass">
+                                <span class="metric-label">Sales Booked</span>
+                                <h2 id="summary-sales" class="metric-val">$0</h2>
+                                <span id="summary-sales-var" class="metric-change">vs Target</span>
+                            </div>
+                            <div class="metric-card glass">
+                                <span class="metric-label">Escalations Flagged</span>
+                                <h2 id="summary-escalations" class="metric-val">0</h2>
+                                <span class="metric-subtext">Needs immediate review</span>
+                            </div>
+                        </div>
+
+                        <div class="layout-grid-2">
+                            <div class="card glass">
+                                <h3>Net Cash Flow Comparison</h3>
+                                <div class="chart-container">
+                                    <canvas id="ncf-chart"></canvas>
+                                </div>
+                            </div>
+                            <div class="card glass">
+                                <h3>Active Escalation Alerts</h3>
+                                <div class="table-container compact">
+                                    <table id="summary-escalations-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Item</th>
+                                                <th>Owner</th>
+                                                <th>Risk</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: CASH FLOW REPORT -->
+                    <div id="tab-cashflow" class="tab-pane">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 12px;">
+                            <a id="download-excel-cf" href="/static/Site_Performance_Report.xlsx" class="btn btn-secondary btn-sm" download>
+                                <i class="fa-solid fa-file-excel"></i> Download Excel
+                            </a>
+                            <button onclick="downloadPDF('tab-cashflow-pdf-content', 'Cash_Flow_Report.pdf')" class="btn btn-secondary btn-sm" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; cursor: pointer;">
+                                <i class="fa-solid fa-file-pdf"></i> Download PDF
+                            </button>
+                        </div>
+                        <div id="tab-cashflow-pdf-content" style="background: #0b0f19; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                            <div class="card glass" style="margin-bottom: 24px; border: none; background: transparent; padding: 0; box-shadow: none;">
+                                <h3 style="margin-bottom: 16px;">Collections vs Outflows & NCF</h3>
+                                <div class="table-container">
+                                    <table id="cashflow-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Metric</th>
+                                                <th>Collections Received</th>
+                                                <th>Collections Due / Overdue</th>
+                                                <th>Construction Outflow</th>
+                                                <th>Other Costs</th>
+                                                <th>Actual NCF</th>
+                                                <th>Target NCF</th>
+                                                <th>Variance</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                            
+                            <!-- EXECUTIVE CORRELATION INTERPRETATION -->
+                            <div class="card glass" style="border: none; background: transparent; padding: 0; box-shadow: none; margin-top: 24px;">
+                                <div class="card-header" style="border-bottom: 1px solid var(--border-color); padding-bottom: 12px; margin-bottom: 16px;">
+                                    <h3><i class="fa-solid fa-chart-line" style="color: var(--primary-color); margin-right: 8px;"></i> Executive Analysis: Variable Correlations & Drivers</h3>
+                                </div>
+                                <div class="executive-narrative" style="line-height: 1.6; font-size: 14px; color: var(--text-primary);">
+                                    <p style="margin-bottom: 16px; font-weight: 500;">
+                                        <strong>Real Estate Cash Flow Dynamics:</strong> In real estate development, cash flow metrics are heavily correlated with construction milestones. Our current numbers illustrate this cascade clearly:
+                                    </p>
+                                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; margin-bottom: 24px;">
+                                        <div class="narrative-box" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px;">
+                                            <h4 style="color: var(--danger); margin-bottom: 8px; font-size: 14px; font-family: var(--font-heading);"><i class="fa-solid fa-circle-exclamation"></i> 1. Construction Delays Halt Collections</h4>
+                                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                                Customer billing triggers are tied directly to completion certificates. Because <strong>54 construction activities are delayed</strong> (due to labor and materials shortage), we are unable to issue demand notices. This has stalled our collections pipeline, resulting in only <strong>1.9% collection achievement</strong>.
+                                            </p>
+                                        </div>
+                                        <div class="narrative-box" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px;">
+                                            <h4 style="color: var(--warning); margin-bottom: 8px; font-size: 14px; font-family: var(--font-heading);"><i class="fa-solid fa-triangle-exclamation"></i> 2. Under-Spent Outflow Paradox</h4>
+                                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                                While construction outflow shows a positive budget variance of <strong>+₹208.52 Cr</strong> under budget, this is not a cost-saving. It indicates slow physical progress, meaning contractor progress payments are withheld, which triggers the subsequent collections drop.
+                                            </p>
+                                        </div>
+                                        <div class="narrative-box" style="background: rgba(255, 255, 255, 0.02); border: 1px solid var(--border-color); padding: 16px; border-radius: 10px;">
+                                            <h4 style="color: var(--primary-color); margin-bottom: 8px; font-size: 14px; font-family: var(--font-heading);"><i class="fa-solid fa-money-bill-transfer"></i> 3. Operational Process Leakages</h4>
+                                            <p style="font-size: 12px; color: var(--text-secondary);">
+                                                Capital is trapped in completed milestones (e.g. Tower slab cast) that remain unpaid. We have incurred the construction costs to build these structures, but billing/collection failed to dun the customer or collect the dues, leading to cash flow leakage.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div style="background: rgba(99, 102, 241, 0.08); border: 1px solid rgba(99, 102, 241, 0.2); padding: 16px; border-radius: 10px; font-size: 13px; color: var(--text-primary);">
+                                        <strong>Executive Recommendations:</strong> (1) Deploy emergency labor forces to clear delayed construction activities linked to billing milestones. (2) Issue immediate collection follow-ups for already completed milestones. (3) Utilize our backup credit line to bridge the <strong>-₹11.38 Cr</strong> NCF deficit.
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PROGRESS UPDATE -->
+                    <div id="tab-progress" class="tab-pane">
+                        <div class="card glass">
+                            <h3>Key Metrics Progress Against AOP Targets</h3>
+                            <div class="table-container">
+                                <table id="progress-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Category</th>
+                                            <th>Metric</th>
+                                            <th>Description</th>
+                                            <th>Actual</th>
+                                            <th>Target</th>
+                                            <th>Variance</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: ESCALATIONS -->
+                    <div id="tab-escalation" class="tab-pane">
+                        <div class="card glass">
+                            <h3>Red / Amber Risks & Mismatches</h3>
+                            <div class="filter-bar" style="display: flex; gap: 16px; margin: 16px 0;">
+                                <input type="text" id="search-esc" placeholder="Search escalations (metric, reason, owner...)..." style="flex: 1; padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px;">
+                                <select id="filter-esc-severity" style="padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px; cursor: pointer;">
+                                    <option value="">All Severities</option>
+                                    <option value="red">Red</option>
+                                    <option value="amber">Amber</option>
+                                </select>
+                                <select id="filter-esc-due" style="padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px; cursor: pointer;">
+                                    <option value="">All Due Dates</option>
+                                    <option value="immediate">Immediate</option>
+                                    <option value="next 48 hours">Next 48 Hours</option>
+                                    <option value="next 7 days">Next 7 Days</option>
+                                </select>
+                            </div>
+                            <div class="table-container">
+                                <table id="escalations-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Item</th>
+                                            <th>Metric Impacted</th>
+                                            <th>Reason</th>
+                                            <th>Owner</th>
+                                            <th>Due Date</th>
+                                            <th>Severity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: ACTION PLAN -->
+                    <div id="tab-actions" class="tab-pane">
+                        <div class="card glass">
+                            <h3>Owner-wise Task List</h3>
+                            <div class="filter-bar" style="display: flex; gap: 16px; margin: 16px 0;">
+                                <input type="text" id="search-act" placeholder="Search tasks (owner, task details...)..." style="flex: 1; padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px;">
+                                <select id="filter-act-dept" style="padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px; cursor: pointer;">
+                                    <option value="">All Departments</option>
+                                    <option value="sales">Sales</option>
+                                    <option value="collections">Collections</option>
+                                    <option value="construction">Construction</option>
+                                </select>
+                                <select id="filter-act-priority" style="padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px; cursor: pointer;">
+                                    <option value="">All Priorities</option>
+                                    <option value="high">High</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="low">Low</option>
+                                </select>
+                            </div>
+                            <div class="table-container">
+                                <table id="actions-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Owner</th>
+                                            <th>Department</th>
+                                            <th>Task</th>
+                                            <th>Priority</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: DATA QUALITY -->
+                    <div id="tab-quality" class="tab-pane">
+                        <div class="card glass">
+                            <h3>Data Integrity & Missing Data Logs</h3>
+                            <div class="table-container">
+                                <table id="quality-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Timestamp</th>
+                                            <th>File/Sheet</th>
+                                            <th>Field/Activity</th>
+                                            <th>Issue Type</th>
+                                            <th>Details</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody></tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: COMMUNICATIONS -->
+                    <div id="tab-comms" class="tab-pane">
+                        <div class="card glass">
+                            <h3>Auto-Generated Communications Drafts</h3>
+                            <div class="filter-bar" style="margin: 16px 0;">
+                                <input type="text" id="search-comm" placeholder="Search recipients or message drafts..." style="width: 100%; padding: 10px 16px; border-radius: 8px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); color: var(--text-primary); font-size: 13px;">
+                            </div>
+                            <div class="comms-list" id="comms-container"></div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: PERFORMANCE REPORT -->
+                    <div id="tab-performance" class="tab-pane">
+                        <div style="display: flex; gap: 8px; justify-content: flex-end; margin-bottom: 12px;">
+                            <a id="download-excel-perf" href="/static/Site_Performance_Report.xlsx" class="btn btn-secondary btn-sm" download>
+                                <i class="fa-solid fa-file-excel"></i> Download Excel
+                            </a>
+                            <button onclick="downloadPDF('tab-performance-pdf-content', 'Site_Performance_Report.pdf')" class="btn btn-secondary btn-sm" style="background: rgba(239, 68, 68, 0.15); border-color: rgba(239, 68, 68, 0.3); color: #f87171; cursor: pointer;">
+                                <i class="fa-solid fa-file-pdf"></i> Download PDF
+                            </button>
+                        </div>
+                        <div id="tab-performance-pdf-content" style="background: #0b0f19; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+                            <div class="card glass" style="border: none; background: transparent; padding: 0; box-shadow: none; margin-bottom: 0;">
+                                <h3 style="margin-bottom: 16px;">Month-End Site Performance Report (CBE Inspired)</h3>
+                                <div class="table-container">
+                                    <table id="performance-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Section</th>
+                                                <th>Key Metric</th>
+                                                <th>Value / Detail</th>
+                                                <th>Status</th>
+                                                <th>Key Decision Item</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- TAB: DATA WORKFLOW -->
+                    <div id="tab-workflow" class="tab-pane">
+                        <div class="card glass">
+                            <div class="card-header">
+                                <h3><i class="fa-solid fa-network-wired" style="color: var(--primary-color); margin-right: 8px;"></i> Relational Engine & Workflow Visualizer</h3>
+                                <button id="btn-simulate" class="btn btn-primary btn-sm">
+                                    <i class="fa-solid fa-play"></i> Simulate Engine Integration
+                                </button>
+                            </div>
+                            <p class="section-desc" style="color: var(--text-secondary); margin-bottom: 24px; font-size: 14px;">
+                                Click on the source nodes or click "Simulate Engine Integration" to trace how the rules engine parses, links, sanitizes, and evaluates the project datasets.
+                            </p>
+
+                            <!-- FLOWCHART CONTAINER -->
+                            <div class="flowchart-container" style="display: flex; flex-direction: column; gap: 24px; margin-bottom: 30px; position: relative;">
+                                <!-- Row 1: Source Files -->
+                                <div style="display: flex; justify-content: space-around; gap: 16px; flex-wrap: wrap;">
+                                    <div class="flow-node glass node-file" id="node-sales" onclick="showWorkflowDetail('sales')" style="flex: 1; min-width: 180px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(99, 102, 241, 0.2);">
+                                        <i class="fa-solid fa-file-excel" style="font-size: 24px; color: var(--primary-color); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">Sales Dump</h4>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">Sales_SANITIZED.xlsx</span>
+                                    </div>
+                                    <div class="flow-node glass node-file" id="node-construction" onclick="showWorkflowDetail('construction')" style="flex: 1; min-width: 180px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <i class="fa-solid fa-file-excel" style="font-size: 24px; color: var(--success); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">Construction Tracker</h4>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">Construction_Tracking.xlsx</span>
+                                    </div>
+                                    <div class="flow-node glass node-file" id="node-collections" onclick="showWorkflowDetail('collections')" style="flex: 1; min-width: 180px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                        <i class="fa-solid fa-file-excel" style="font-size: 24px; color: var(--warning); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">Collections Tracker</h4>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">Collections_AOP.xlsx</span>
+                                    </div>
+                                    <div class="flow-node glass node-aop" id="node-aop" onclick="showWorkflowDetail('aop')" style="flex: 1; min-width: 180px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(239, 68, 68, 0.2);">
+                                        <i class="fa-solid fa-file-excel" style="font-size: 24px; color: var(--danger); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">AOP Targets (AOP)</h4>
+                                        <span style="font-size: 10px; color: var(--text-secondary);">AOP_Targets.xlsx</span>
+                                    </div>
+                                </div>
+
+                                <!-- Down Arrows Container -->
+                                <div style="display: flex; justify-content: center; height: 30px; align-items: center; position: relative;">
+                                    <div class="sim-line" id="line-down" style="width: 2px; height: 30px; background: rgba(255, 255, 255, 0.1); transition: 0.5s;"></div>
+                                </div>
+
+                                <!-- Row 2: Central Integration Engine -->
+                                <div style="display: flex; justify-content: center;">
+                                    <div class="flow-node glass node-engine" id="node-engine" onclick="showWorkflowDetail('engine')" style="width: 320px; padding: 20px; border-radius: 16px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(255, 255, 255, 0.1); position: relative; background: rgba(17, 24, 39, 0.9);">
+                                        <i class="fa-solid fa-gears" id="gears-icon" style="font-size: 32px; color: var(--primary-color); margin-bottom: 10px; transition: transform 0.5s;"></i>
+                                        <h4 style="font-size: 16px; font-family: var(--font-heading);">Pandas Relational & Rules Engine</h4>
+                                        <span style="font-size: 11px; color: var(--text-secondary);">Links, Aligns, and Calculates Variables</span>
+                                    </div>
+                                </div>
+
+                                <!-- Down Arrows Container -->
+                                <div style="display: flex; justify-content: center; height: 30px; align-items: center;">
+                                    <div style="width: 2px; height: 30px; background: rgba(255, 255, 255, 0.1);"></div>
+                                </div>
+
+                                <!-- Row 3: Quality Shield & Report Generation -->
+                                <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                                    <div class="flow-node glass node-quality" id="node-quality" onclick="showWorkflowDetail('quality')" style="width: 260px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(245, 158, 11, 0.2);">
+                                        <i class="fa-solid fa-shield-halved" style="font-size: 24px; color: var(--warning); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">Data Quality Guardrail</h4>
+                                        <span style="font-size: 11px; color: var(--text-secondary);">Flags Anomalies & Sanitizes Inputs</span>
+                                    </div>
+                                    <div class="flow-node glass node-output" id="node-output" onclick="showWorkflowDetail('output')" style="width: 260px; padding: 16px; border-radius: 12px; text-align: center; cursor: pointer; transition: 0.3s; border: 1px solid rgba(16, 185, 129, 0.2);">
+                                        <i class="fa-solid fa-file-shield" style="font-size: 24px; color: var(--success); margin-bottom: 8px;"></i>
+                                        <h4 style="font-size: 13px;">Outputs & Comms Generator</h4>
+                                        <span style="font-size: 11px; color: var(--text-secondary);">Saves Excel Sheets & Drafts Text</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- LAYOUT GRID FOR INTERACTIVE DETAILS AND LIVE SIMULATOR PREVIEW -->
+                            <div class="layout-grid-2" style="margin-top: 30px;">
+                                <!-- LEFT: Interactive details card -->
+                                <div class="card glass" id="workflow-details-card" style="margin-bottom: 0; min-height: 320px; padding: 24px;">
+                                    <h3 id="wf-detail-title" style="font-family: var(--font-heading); margin-bottom: 12px;">Relational Linking Keys</h3>
+                                    <div id="wf-detail-body" style="font-size: 13px; line-height: 1.6; color: var(--text-secondary);">
+                                        Click on any block or node in the diagram above to display detailed variable mapping, mathematical rules, and quality fallback parameters applied by the pandas engine.
+                                    </div>
+                                </div>
+
+                                <!-- RIGHT: Live Simulation Preview Console -->
+                                <div class="card glass" style="margin-bottom: 0; display: flex; flex-direction: column; justify-content: space-between; padding: 24px;">
+                                    <div class="card-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); padding-bottom: 8px; margin-bottom: 12px;">
+                                        <h3 style="font-size: 14px;"><i class="fa-solid fa-terminal" style="color: var(--warning); margin-right: 6px;"></i> Live Engine Console Logger</h3>
+                                    </div>
+                                    
+                                    <!-- Console output -->
+                                    <div id="sim-console" style="background: #070a13; border: 1px solid var(--border-color); padding: 12px; border-radius: 8px; font-family: monospace; font-size: 11px; color: var(--text-primary); flex-grow: 1; min-height: 180px; overflow-y: auto; max-height: 220px; margin-bottom: 12px; line-height: 1.5; white-space: pre-wrap;">
+[System Ready] Click "Simulate Engine Integration" to begin data processing run...
+                                    </div>
+                                    
+                                    <!-- Simple dynamic table display -->
+                                    <div id="sim-live-preview" style="font-size: 11px; margin-top: 10px; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 12px;">
+                                        <div style="font-weight: 600; color: var(--primary-color); margin-bottom: 6px; display: flex; align-items: center; gap: 6px;">
+                                            <i class="fa-solid fa-table-list"></i> Relational Linking Data Stream Monitor
+                                        </div>
+                                        <div class="table-container compact" style="max-height: 180px; overflow-y: auto; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px;">
+                                            <table style="font-size: 10px;" id="sim-preview-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th>Project</th>
+                                                        <th>Milestone</th>
+                                                        <th>Progress %</th>
+                                                        <th>Amount</th>
+                                                        <th>Status</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    <tr id="sim-preview-placeholder"><td colspan="5" style="text-align: center; color: var(--text-secondary); padding: 12px;">[Awaiting simulation run to populate linked dataset...]</td></tr>
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="{{ url_for('static', filename='app.js') }}"></script>
+</body>
+</html>
