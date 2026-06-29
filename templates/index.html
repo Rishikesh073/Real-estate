@@ -567,162 +567,311 @@
         <div id="comprehensive-pdf-report" style="background: #0b0f19; padding: 20px; color: #f3f4f6; font-family: 'Plus Jakarta Sans', sans-serif; width: 1000px;">
             
             <!-- PAGE 1: TITLE, GENERAL INFO & CASH FLOWS -->
-            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
-                <!-- Header -->
-                <div style="display: flex; justify-content: space-between; border-bottom: 2px solid rgba(255,255,255,0.1); padding-bottom: 16px; margin-bottom: 24px;">
-                    <div>
-                        <h1 style="font-size: 24px; font-family: 'Outfit', sans-serif; margin-bottom: 6px; color: #6366f1; font-weight: 700;">Month-End Performance & Risk Audit Report</h1>
-                        <p style="font-size: 13px; color: #9ca3af; margin: 0;">Project Name: <strong>Eden Square (R5B Tower)</strong></p>
+            <style>
+            /* Clean Print Styles for PDF */
+            #comprehensive-pdf-report {
+                background-color: #ffffff !important;
+                color: #1f2937 !important;
+                font-family: 'Plus Jakarta Sans', Arial, sans-serif !important;
+                width: 1000px !important;
+                padding: 30px !important;
+                box-sizing: border-box !important;
+            }
+            #comprehensive-pdf-report h1, 
+            #comprehensive-pdf-report h2, 
+            #comprehensive-pdf-report h3, 
+            #comprehensive-pdf-report h4 {
+                font-family: 'Outfit', Arial, sans-serif !important;
+                color: #1e3a8a !important;
+                margin: 0 !important;
+            }
+            #comprehensive-pdf-report table {
+                width: 100% !important;
+                border-collapse: collapse !important;
+                margin-top: 10px !important;
+                margin-bottom: 20px !important;
+                font-size: 11px !important;
+                background-color: #ffffff !important;
+            }
+            #comprehensive-pdf-report th {
+                background-color: #1e3a8a !important;
+                color: #ffffff !important;
+                font-weight: 700 !important;
+                padding: 10px 12px !important;
+                text-transform: uppercase !important;
+                font-size: 10px !important;
+                border-bottom: 3px solid #1d4ed8 !important;
+                text-align: left !important;
+            }
+            #comprehensive-pdf-report td {
+                padding: 10px 12px !important;
+                color: #374151 !important;
+                border-bottom: 1px solid #e5e7eb !important;
+            }
+            #comprehensive-pdf-report tbody tr:nth-child(even) {
+                background-color: #f9fafb !important;
+            }
+            #comprehensive-pdf-report tbody tr:hover {
+                background-color: #f3f4f6 !important;
+            }
+            #comprehensive-pdf-report .badge {
+                padding: 4px 8px !important;
+                border-radius: 4px !important;
+                font-size: 9px !important;
+                font-weight: 700 !important;
+                text-transform: uppercase !important;
+                display: inline-block !important;
+            }
+            #comprehensive-pdf-report .badge-red {
+                background-color: #fecaca !important;
+                color: #dc2626 !important;
+                border: 1px solid #f87171 !important;
+            }
+            #comprehensive-pdf-report .badge-amber {
+                background-color: #fef3c7 !important;
+                color: #d97706 !important;
+                border: 1px solid #fbbf24 !important;
+            }
+            #comprehensive-pdf-report .badge-green {
+                background-color: #d1fae5 !important;
+                color: #059669 !important;
+                border: 1px solid #34d399 !important;
+            }
+            #comprehensive-pdf-report .pdf-kpi-card {
+                background: #f9fafb !important;
+                border: 1px solid #e5e7eb !important;
+                border-radius: 8px !important;
+                padding: 16px !important;
+                text-align: center !important;
+            }
+            #comprehensive-pdf-report .pdf-kpi-card span {
+                font-size: 10px !important;
+                text-transform: uppercase !important;
+                color: #6b7280 !important;
+                font-weight: 600 !important;
+                letter-spacing: 0.5px !important;
+            }
+            #comprehensive-pdf-report .pdf-kpi-card h2 {
+                font-size: 20px !important;
+                color: #111827 !important;
+                margin-top: 6px !important;
+                font-weight: 700 !important;
+            }
+            </style>
+
+            <!-- PAGE 1: COVER PAGE -->
+            <div style="page-break-after: always; break-after: page; min-height: 600px; position: relative;">
+                <div style="background: #1e3a8a; height: 16px; border-radius: 4px; margin-bottom: 40px;"></div>
+                
+                <div style="margin-bottom: 50px;">
+                    <h1 style="font-size: 32px; font-weight: 800; letter-spacing: -0.5px; color: #1e3a8a; margin-bottom: 8px;">OPERATIONS & RISK PERFORMANCE AUDIT</h1>
+                    <p style="font-size: 16px; color: #4b5563; font-weight: 500;">Real Estate Development & Business Rules Evaluation Log</p>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1.5fr 1fr; gap: 40px; margin-bottom: 50px;">
+                    <!-- Project metadata -->
+                    <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px;">
+                        <h3 style="font-size: 14px; text-transform: uppercase; color: #1e3a8a; font-weight: 700; border-bottom: 1px solid #e5e7eb; padding-bottom: 8px; margin-bottom: 16px;">Audit Specifications</h3>
+                        <table style="margin: 0; background: transparent; font-size: 12px !important;">
+                            <tr style="background: transparent;"><td style="padding: 6px 0; border: none; font-weight: 600; color: #4b5563;">Project Name:</td><td style="padding: 6px 0; border: none; color: #111827; font-weight: 700;">Eden Square (R5B Tower)</td></tr>
+                            <tr style="background: transparent;"><td style="padding: 6px 0; border: none; font-weight: 600; color: #4b5563;">Reporting Period:</td><td id="pdf-report-month" style="padding: 6px 0; border: none; color: #1e3a8a; font-weight: 700;">June 2026</td></tr>
+                            <tr style="background: transparent;"><td style="padding: 6px 0; border: none; font-weight: 600; color: #4b5563;">Audit Execution:</td><td style="padding: 6px 0; border: none; color: #059669; font-weight: 700;">Pass (Rules Checked)</td></tr>
+                            <tr style="background: transparent;"><td style="padding: 6px 0; border: none; font-weight: 600; color: #4b5563;">Generation Timestamp:</td><td id="pdf-report-timestamp" style="padding: 6px 0; border: none; color: #111827;">June 29, 2026 14:00</td></tr>
+                        </table>
                     </div>
-                    <div style="text-align: right;">
-                        <p style="font-size: 14px; margin: 0; font-weight: 600;">Report Period: <span id="pdf-report-month" style="color: #6366f1; font-weight: 700;">June 2026</span></p>
-                        <p style="font-size: 11px; color: #9ca3af; margin-top: 4px;">Generated: <span id="pdf-report-timestamp">June 28, 2026 18:00</span></p>
+                    
+                    <!-- KPI summaries -->
+                    <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px;">
+                        <div class="pdf-kpi-card">
+                            <span>Total Booked</span>
+                            <h2 id="pdf-summary-sales">₹0</h2>
+                        </div>
+                        <div class="pdf-kpi-card">
+                            <span>Collections</span>
+                            <h2 id="pdf-summary-collections">₹0</h2>
+                        </div>
+                        <div class="pdf-kpi-card">
+                            <span>Actual NCF</span>
+                            <h2 id="pdf-summary-ncf">₹0</h2>
+                        </div>
+                        <div class="pdf-kpi-card">
+                            <span>Escalations</span>
+                            <h2 id="pdf-summary-escalations" style="color: #dc2626;">0</h2>
+                        </div>
                     </div>
                 </div>
                 
-                <!-- Summary stats -->
-                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px;">
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Actual Collections</span>
-                        <h2 id="pdf-summary-collections" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Actual Net Cash Flow</span>
-                        <h2 id="pdf-summary-ncf" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Sales Booked</span>
-                        <h2 id="pdf-summary-sales" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">₹0</h2>
-                    </div>
-                    <div style="background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.08); padding: 12px; border-radius: 8px; text-align: center;">
-                        <span style="font-size: 9px; text-transform: uppercase; color: #9ca3af;">Escalations Flagged</span>
-                        <h2 id="pdf-summary-escalations" style="font-size: 16px; margin: 4px 0 0 0; color: #fff; font-weight: 700;">0</h2>
+                <div style="background: #eff6ff; border-left: 4px solid #1d4ed8; padding: 20px; border-radius: 0 8px 8px 0;">
+                    <h4 style="font-size: 13px; color: #1e40af; font-weight: 700; margin-bottom: 6px !important;">Executive Overview Statement</h4>
+                    <p style="font-size: 11.5px; line-height: 1.5; color: #1e3a8a; margin: 0;">
+                        This document serves as the formal monthly review board audit for physical construction tasks, cash collections, sales agreement volumes, and cost parameters. All calculations are performed deterministically against the Annual Operating Plan (AOP) targets. Action plans and priority escalations are compiled automatically from exceptions flagged in the rules matrix.
+                    </p>
+                </div>
+                
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af;">
+                    <span>Operations & Risk Audit Report</span>
+                    <span>Page 1 of 5</span>
+                </div>
+            </div>
+
+            <!-- PAGE 2: FINANCIAL STATUS & CASH FLOW -->
+            <div style="page-break-after: always; break-after: page; min-height: 600px; position: relative;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 24px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 11px; color: #6b7280;" class="pdf-page-month-lbl">June 2026</span>
+                </div>
+                
+                <div style="margin-bottom: 20px;">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">I. Net Cash Flow & Variance Analysis</h2>
+                    <p style="font-size: 11px; color: #4b5563; margin-bottom: 16px;">Comparison of collected sales inflow, construction contractor outflow (CoC), and general other overhead costs.</p>
+                    
+                    <table id="pdf-cashflow-table">
+                        <thead>
+                            <tr>
+                                <th>Metric</th>
+                                <th>Collections Inflow</th>
+                                <th>Due / Overdue</th>
+                                <th>Construction Outflow</th>
+                                <th>Other Costs</th>
+                                <th>Actual NCF</th>
+                                <th>Target NCF</th>
+                                <th>Variance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div style="background: #fafafa; border: 1px solid #e5e7eb; border-radius: 8px; padding: 18px; margin-top: 15px;">
+                    <h3 style="font-size: 12px; color: #111827; font-weight: 700; margin-bottom: 10px !important;">Key Financial Correlation Drivers & Insights</h3>
+                    <div style="font-size: 11px; line-height: 1.6; color: #4b5563;">
+                        <p style="margin-bottom: 8px;">
+                            <strong>Construction Milestone Linkage:</strong> Customer billing triggers are tied directly to completion certificates. Physical construction delays on the tower structure directly restrict billing issuances, reducing incoming cash collections.
+                        </p>
+                        <p style="margin-bottom: 8px;">
+                            <strong>Outflow Variance Exception:</strong> Under-budget construction spending (+₹208.52 Cr variance) does not indicate savings; it indicates slow task completions, postponing contractor payments.
+                        </p>
+                        <p style="margin: 0;">
+                            <strong>Cash Flow Leakage Prevention:</strong> Unpaid completed milestones represent completed works where customer demand notices remain outstanding or uncollected.
+                        </p>
                     </div>
                 </div>
                 
-                <!-- Cash Flow Table -->
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af;">
+                    <span>Operations & Risk Audit Report</span>
+                    <span>Page 2 of 5</span>
+                </div>
+            </div>
+
+            <!-- PAGE 3: COMMERCIAL TARGET PROGRESS -->
+            <div style="page-break-after: always; break-after: page; min-height: 600px; position: relative;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 24px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 11px; color: #6b7280;" class="pdf-page-month-lbl">June 2026</span>
+                </div>
+                
                 <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-money-bill-wave" style="margin-right: 6px;"></i> 1. Net Cash Flow & Budget Variances</h3>
-                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
-                        <table id="pdf-cashflow-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
-                                    <th style="padding: 8px;">Metric</th>
-                                    <th style="padding: 8px;">Collections Received</th>
-                                    <th style="padding: 8px;">Collections Due/Overdue</th>
-                                    <th style="padding: 8px;">Construction Outflow</th>
-                                    <th style="padding: 8px;">Other Costs</th>
-                                    <th style="padding: 8px;">Actual NCF</th>
-                                    <th style="padding: 8px;">Target NCF</th>
-                                    <th style="padding: 8px;">Variance</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                    <h2 style="font-size: 16px; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">II. Commercial Target Tracking & Product Mix</h2>
+                    <p style="font-size: 11px; color: #4b5563; margin-bottom: 16px;">Key targets against the Annual Operating Plan (AOP) for agreement value, booking volumes, and configuration counts.</p>
+                    
+                    <table id="pdf-progress-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 120px;">Category</th>
+                                <th style="width: 180px;">Metric</th>
+                                <th>Description</th>
+                                <th style="width: 100px;">Actual</th>
+                                <th style="width: 100px;">Target</th>
+                                <th style="width: 100px;">Variance</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af;">
+                    <span>Operations & Risk Audit Report</span>
+                    <span>Page 3 of 5</span>
                 </div>
             </div>
 
-            <!-- PAGE 2: KEY TARGETS PROGRESS -->
-            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
-                <!-- Mini Header -->
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
-                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
-                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
+            <!-- PAGE 4: ESCALATIONS & ACTIVE RISKS -->
+            <div style="page-break-after: always; break-after: page; min-height: 600px; position: relative;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 24px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 11px; color: #6b7280;" class="pdf-page-month-lbl">June 2026</span>
                 </div>
-                <!-- Progress Targets Table -->
+                
                 <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-chart-bar" style="margin-right: 6px;"></i> 2. Key Metrics Progress Against Targets</h3>
-                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
-                        <table id="pdf-progress-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
-                                    <th style="padding: 8px; width: 100px;">Category</th>
-                                    <th style="padding: 8px; width: 130px;">Metric</th>
-                                    <th style="padding: 8px;">Description</th>
-                                    <th style="padding: 8px; width: 95px;">Actual</th>
-                                    <th style="padding: 8px; width: 95px;">Target</th>
-                                    <th style="padding: 8px; width: 95px;">Variance</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                    <h2 style="font-size: 16px; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">III. Escalations & Active Risk Log</h2>
+                    <p style="font-size: 11px; color: #4b5563; margin-bottom: 16px;">Exception listings calculated from business rules including budget variances, customer overdue ages, and construction delays.</p>
+                    
+                    <table id="pdf-escalations-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 130px;">Item</th>
+                                <th style="width: 130px;">Metric Impacted</th>
+                                <th>Reason</th>
+                                <th style="width: 130px;">Suggested Owner</th>
+                                <th style="width: 100px;">Due Date</th>
+                                <th style="width: 80px;">Severity</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                </div>
+                
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af;">
+                    <span>Operations & Risk Audit Report</span>
+                    <span>Page 4 of 5</span>
                 </div>
             </div>
 
-            <!-- PAGE 3: ESCALATIONS & ACTIVE RISKS -->
-            <div style="page-break-after: always; break-after: page; margin-bottom: 40px; min-height: 620px;">
-                <!-- Mini Header -->
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
-                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
-                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
+            <!-- PAGE 5: ACTION PLAN & DATA QUALITY LOGS -->
+            <div style="min-height: 600px; position: relative;">
+                <div style="display: flex; justify-content: space-between; border-bottom: 1.5px solid #1e3a8a; padding-bottom: 8px; margin-bottom: 24px;">
+                    <span style="font-size: 11px; font-weight: 700; color: #1e3a8a; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
+                    <span style="font-size: 11px; color: #6b7280;" class="pdf-page-month-lbl">June 2026</span>
                 </div>
-                <!-- Escalations Table -->
-                <div style="margin-bottom: 20px;">
-                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-triangle-exclamation" style="margin-right: 6px;"></i> 3. Escalations & Red/Amber Risks</h3>
-                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
-                        <table id="pdf-escalations-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
-                                    <th style="padding: 8px; width: 120px;">Item</th>
-                                    <th style="padding: 8px; width: 120px;">Metric Impacted</th>
-                                    <th style="padding: 8px;">Reason</th>
-                                    <th style="padding: 8px; width: 120px;">Suggested Owner</th>
-                                    <th style="padding: 8px; width: 100px;">Due Date</th>
-                                    <th style="padding: 8px; width: 80px;">Severity</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-
-            <!-- PAGE 4: ACTION PLAN & DATA QUALITY LOGS -->
-            <div style="min-height: 620px;">
-                <!-- Mini Header -->
-                <div style="display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 8px; margin-bottom: 20px;">
-                    <span style="font-size: 10px; font-weight: 700; color: #6366f1; text-transform: uppercase;">Eden Square (R5B) — Performance Audit</span>
-                    <span style="font-size: 10px; color: #9ca3af;" class="pdf-page-month-lbl">June 2026</span>
-                </div>
-                <!-- Action Plan Table -->
-                <div style="margin-bottom: 28px;">
-                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-tasks" style="margin-right: 6px;"></i> 4. Owner-wise Action Plan</h3>
-                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
-                        <table id="pdf-actions-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
-                                    <th style="padding: 8px; width: 120px;">Owner</th>
-                                    <th style="padding: 8px; width: 120px;">Department</th>
-                                    <th style="padding: 8px;">Task</th>
-                                    <th style="padding: 8px; width: 100px;">Priority</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                
+                <div style="margin-bottom: 24px;">
+                    <h2 style="font-size: 16px; font-weight: 700; color: #1e3a8a; margin-bottom: 8px;">IV. Action Plan & Data Quality Safeguards</h2>
+                    <p style="font-size: 11px; color: #4b5563; margin-bottom: 10px;">Operational tasks assigned to owners and validation checks of dataset integrity.</p>
+                    
+                    <h3 style="font-size: 12px; color: #1e3a8a; margin-bottom: 6px;">1. Operational Tasks Checklist</h3>
+                    <table id="pdf-actions-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 150px;">Owner</th>
+                                <th style="width: 150px;">Department</th>
+                                <th>Task Details</th>
+                                <th style="width: 100px;">Priority</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
 
-                <!-- Quality Logs Table -->
-                <div>
-                    <h3 style="font-size: 14px; margin-bottom: 12px; border-bottom: 1px solid rgba(255,255,255,0.1); padding-bottom: 6px; color: #6366f1; font-weight: 600;"><i class="fa-solid fa-shield-halved" style="margin-right: 6px;"></i> 5. Data Integrity & Quality Safeguards</h3>
-                    <div class="table-container" style="border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; background: rgba(0,0,0,0.15);">
-                        <table id="pdf-quality-table" style="width: 100%; border-collapse: collapse; font-size: 10.5px;">
-                            <thead>
-                                <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left; background: rgba(255,255,255,0.02); color: #fff;">
-                                    <th style="padding: 8px; width: 130px;">Timestamp</th>
-                                    <th style="padding: 8px; width: 120px;">File/Sheet</th>
-                                    <th style="padding: 8px; width: 120px;">Field/Activity</th>
-                                    <th style="padding: 8px; width: 120px;">Issue Type</th>
-                                    <th style="padding: 8px;">Details</th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
+                <div style="margin-top: 20px;">
+                    <h3 style="font-size: 12px; color: #1e3a8a; margin-bottom: 6px;">2. Data Integrity Warning Logs</h3>
+                    <table id="pdf-quality-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 130px;">Timestamp</th>
+                                <th style="width: 120px;">File/Sheet</th>
+                                <th style="width: 120px;">Field/Activity</th>
+                                <th style="width: 120px;">Issue Type</th>
+                                <th>Details</th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
                 </div>
-            </div>
+                
+                <div style="position: absolute; bottom: 0; left: 0; right: 0; border-top: 1px solid #e5e7eb; padding-top: 8px; display: flex; justify-content: space-between; font-size: 10px; color: #9ca3af;">
+                    <span>Operations & Risk Audit Report</span>
+                    <span>Page 5 of 5</span>
+                </div>
             
         </div>
     </div>

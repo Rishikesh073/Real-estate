@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
         downloadFullPdfBtn.addEventListener('click', () => {
             const monthSelect = document.getElementById('filter-analysis-month');
             const selectedMonthName = monthSelect.options[monthSelect.selectedIndex].text.replace(/[\s\(\)]+/g, '_');
-            downloadPDF('comprehensive-pdf-report', `Comprehensive_Month_End_Report_${selectedMonthName}.pdf`);
+            downloadPDF('comprehensive-pdf-report', `Comprehensive_Month_End_Report_${selectedMonthName}.pdf`, '#ffffff');
         });
     }
 
@@ -412,7 +412,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Populate summary cards inside PDF
         document.getElementById('pdf-summary-collections').textContent = document.getElementById('summary-collections').textContent;
-        document.getElementById('pdf-summary-ncf').textContent = document.getElementById('pdf-summary-ncf').textContent;
+        document.getElementById('pdf-summary-ncf').textContent = document.getElementById('summary-ncf').textContent;
         document.getElementById('pdf-summary-sales').textContent = document.getElementById('summary-sales').textContent;
         document.getElementById('pdf-summary-escalations').textContent = document.getElementById('summary-escalations').textContent;
     };
@@ -757,7 +757,7 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 // PDF Export Helper using html2pdf.js
-window.downloadPDF = (elementId, filename) => {
+window.downloadPDF = (elementId, filename, bgCol = '#0b0f19') => {
     const element = document.getElementById(elementId);
     if (!element) return;
     
@@ -769,7 +769,7 @@ window.downloadPDF = (elementId, filename) => {
         html2canvas:  { 
             scale: 2, 
             useCORS: true, 
-            backgroundColor: '#0b0f19' // Keep the premium dark theme background color
+            backgroundColor: bgCol
         },
         jsPDF:        { unit: 'in', format: 'letter', orientation: 'landscape' } // Landscape is perfect for wide tables!
     };
